@@ -19,7 +19,8 @@ Multiple CI products and services offer integrations with fastlane:
 - [Bamboo](/best-practices/continuous-integration/bamboo/)
 - [GitLab CI](/best-practices/continuous-integration/gitlab/)
 - [Azure DevOps](/best-practices/continuous-integration/azure-devops/) (formerly known as: Visual Studio Team Services)
-- [NeverCode](/best-practices/continuous-integration/nevercode/)
+- [Nevercode](/best-practices/continuous-integration/nevercode/)
+- [Codemagic](/best-practices/continuous-integration/codemagic/)
 
 ## Authentication with Apple services
 
