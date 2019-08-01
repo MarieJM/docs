@@ -159,3 +159,8 @@ This content was moved and now lives [here](/best-practices/continuous-integrati
 #### Nevercode Integration
 
 This content was moved and now lives [here](/best-practices/continuous-integration/nevercode/).
+
+#### Codemagic Integration
+
+This content was moved and now lives [here](/best-practices/continuous-integration/codemagic/).
+
