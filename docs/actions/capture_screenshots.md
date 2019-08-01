@@ -19,7 +19,7 @@ Alias for the `capture_ios_screenshots` action
 
 <hr />
 <h4 align="center">
-  Check out the new <a href="https://docs.fastlane.tools/getting-started/ios/screenshots">fastlane documentation</a> on how to generate screenshots
+  Check out the new <a href="https://docs.fastlane.tools/getting-started/ios/screenshots/">fastlane documentation</a> on how to generate screenshots
 </h4>
 <hr />
 
@@ -316,7 +316,7 @@ Radar [23062925](https://openradar.appspot.com/radar?id=5056366381105152) has be
 
 <hr />
 <h4 align="center">
-  Check out the new <a href="https://docs.fastlane.tools/getting-started/ios/screenshots">fastlane documentation</a> on how to generate screenshots
+  Check out the new <a href="https://docs.fastlane.tools/getting-started/ios/screenshots/">fastlane documentation</a> on how to generate screenshots
 </h4>
 <hr />
 
@@ -349,6 +349,31 @@ When the app dies directly after the application is launched there might be 2 pr
 ## Determine language
 
 To detect the currently used localization in your tests, access the `deviceLanguage` variable from `SnapshotHelper.swift`.
+
+## Speed up snapshots
+
+A lot of time in UI tests is spent waiting for animations.
+
+You can disable `UIView` animations in your app to make the tests faster:
+
+```swift
+if ProcessInfo().arguments.contains("SKIP_ANIMATIONS") {
+    UIView.setAnimationsEnabled(false)
+}
+```
+
+This requires you to pass the launch argument like so:
+
+```ruby
+snapshot(launch_arguments: ["SKIP_ANIMATIONS"])
+```
+
+By default, _snapshot_ will wait for a short time for the animations to finish.
+If you're skipping the animations, this is wait time is unnecessary and can be skipped:
+
+```swift
+setupSnapshot(app, waitForAnimations: false)
+```
 
 <hr />
 
@@ -414,6 +439,7 @@ Key | Description | Default
   `number_of_retries` | The number of times a test can fail before snapshot should stop retrying | `1`
   `stop_after_first_error` | Should snapshot stop immediately after the tests completely failed on one device? | `false`
   `derived_data_path` | The directory where build products and other derived data will go | 
+  `result_bundle` | Should an Xcode result bundle be generated in the output directory | `false`
   `test_target_name` | The name of the target you want to test (if you desire to override the Target Application from Xcode) | 
   `namespace_log_files` | Separate the log files per device and per language | 
   `concurrent_simulators` | Take snapshots on multiple simulators concurrently. Note: This option is only applicable when running against Xcode 9 | `true`
@@ -422,13 +448,54 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `capture_screenshots` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::SNAPSHOT_SCREENSHOTS_PATH` | The path to the screenshots
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action capture_screenshots
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/capture_screenshots.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run capture_screenshots
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run capture_screenshots parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/capture_screenshots.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

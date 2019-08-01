@@ -69,55 +69,79 @@ _sigh_ will create, repair and download profiles for the App Store by default.
 
 You can pass your bundle identifier and username like this:
 
-    fastlane sigh -a com.krausefx.app -u username
+```no-highlight
+fastlane sigh -a com.krausefx.app -u username
+```
 
 If you want to generate an **Ad Hoc** profile instead of an App Store profile:
 
-    fastlane sigh --adhoc
+```no-highlight
+fastlane sigh --adhoc
+```
 
 If you want to generate a **Development** profile:
 
-    fastlane sigh --development
+```no-highlight
+fastlane sigh --development
+```
 
 To generate the profile in a specific directory:
 
-    fastlane sigh -o "~/Certificates/"
+```no-highlight
+fastlane sigh -o "~/Certificates/"
+```
 
 To download all your provisioning profiles use
 
-    fastlane sigh download_all
+```no-highlight
+fastlane sigh download_all
+```
 
 Optionally, use `fastlane sigh download_all --download_xcode_profiles` to also include the Xcode managed provisioning profiles
 
 For a list of available parameters and commands run
 
-    fastlane action sigh
+```no-highlight
+fastlane action sigh
+```
 
 ### Advanced
 
 By default, _sigh_ will install the downloaded profile on your machine. If you just want to generate the profile and skip the installation, use the following flag:
 
-    fastlane sigh --skip_install
+```no-highlight
+fastlane sigh --skip_install
+```
 
 To save the provisioning profile under a specific name, use the -q option:
 
-    fastlane sigh -a com.krausefx.app -u username -q "myProfile.mobileprovision"
+```no-highlight
+fastlane sigh -a com.krausefx.app -u username -q "myProfile.mobileprovision"
+```
 
 If for some reason you don't want _sigh_ to verify that the code signing identity is installed on your local machine:
 
-    fastlane sigh --skip_certificate_verification
+```no-highlight
+fastlane sigh --skip_certificate_verification
+```
 
 If you need the provisioning profile to be renewed regardless of its state use the `--force` option. This gives you a profile with the maximum lifetime. `--force` will also add all available devices to this profile.
 
-    fastlane sigh --force
+```no-highlight
+fastlane sigh --force
+```
 
 By default, _sigh_ will include all certificates on development profiles, and first certificate on other types. If you need to specify which certificate to use you can either use the environment variable `SIGH_CERTIFICATE`, or pass the name or expiry date of the certificate as argument:
 
-    fastlane sigh -c "SunApps GmbH"
+```no-highlight
+fastlane sigh -c "SunApps GmbH"
+```
 
 For a list of available parameters and commands run
 
-    fastlane action sigh
+```no-highlight
+fastlane action sigh
+```
 
 
 ### Use with [_fastlane_](https://fastlane.tools)
@@ -141,33 +165,45 @@ This will result in _sigh_ always using the correct signing certificate, which i
 
 _sigh_ can automatically repair all your existing provisioning profiles which are expired or just invalid.
 
-    fastlane sigh repair
+```no-highlight
+fastlane sigh repair
+```
 
 # Resign
 
 If you generated your `ipa` file but want to apply a different code signing onto the ipa file, you can use `sigh resign`:
 
-    fastlane sigh resign
+```no-highlight
+fastlane sigh resign
+```
 
 _sigh_ will find the ipa file and the provisioning profile for you if they are located in the current folder.
 
 You can pass more information using the command line:
 
-    fastlane sigh resign ./path/app.ipa --signing_identity "iPhone Distribution: Felix Krause" -p "my.mobileprovision"
+```no-highlight
+fastlane sigh resign ./path/app.ipa --signing_identity "iPhone Distribution: Felix Krause" -p "my.mobileprovision"
+```
 
 # Manage
 
 With `sigh manage` you can list all provisioning profiles installed locally.
 
-    fastlane sigh manage
+```no-highlight
+fastlane sigh manage
+```
 
 Delete all expired provisioning profiles
 
-    fastlane sigh manage -e
+```no-highlight
+fastlane sigh manage -e
+```
 
 Or delete all `iOS Team Provisioning Profile` by using a regular expression
 
-    fastlane sigh manage -p "iOS\ ?Team Provisioning Profile:"
+```no-highlight
+fastlane sigh manage -p "iOS\ ?Team Provisioning Profile:"
+```
 
 ## Environment Variables
 
@@ -204,7 +240,7 @@ _sigh_ will never touch or use the profiles which are created and managed by Xco
 
 get_provisioning_profile ||
 ---|---
-Supported platforms | ios
+Supported platforms | ios, mac
 Author | @KrauseFx
 Returns | The UUID of the profile sigh just fetched/generated
 
@@ -237,6 +273,7 @@ get_provisioning_profile(
 Key | Description | Default
 ----|-------------|--------
   `adhoc` | Setting this flag will generate AdHoc profiles instead of App Store Profiles | `false`
+  `developer_id` | Setting this flag will generate Developer ID profiles instead of App Store Profiles | `false`
   `development` | Renew the development certificate instead of the production one | `false`
   `skip_install` | By default, the certificate will be added to your local machine. Setting this flag will skip this action | `false`
   `force` | Renew provisioning profiles regardless of its state - to automatically add all devices for ad hoc profiles | `false`
@@ -260,13 +297,58 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `get_provisioning_profile` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::SIGH_PROFILE_PATH` | A path in which certificates, key and profile are exported
+  `SharedValues::SIGH_PROFILE_PATHS` | Paths in which certificates, key and profile are exported
+  `SharedValues::SIGH_UUID` | UUID (Universally Unique IDentifier) of a provisioning profile
+  `SharedValues::SIGH_NAME` | The name of the profile
+  `SharedValues::SIGH_PROFILE_TYPE` | The profile type, can be appstore, adhoc, development, enterprise
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action get_provisioning_profile
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/get_provisioning_profile.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run get_provisioning_profile
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run get_provisioning_profile parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/get_provisioning_profile.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

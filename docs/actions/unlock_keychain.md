@@ -61,7 +61,7 @@ unlock_keychain( # If the keychain file is located in the standard location `~/L
 
 Key | Description | Default
 ----|-------------|--------
-  `path` | Path to the keychain file | 
+  `path` | Path to the keychain file | `login`
   `password` | Keychain password | 
   `add_to_search_list` | Add to keychain search list | `true`
   `set_default` | Set as default keychain | `false`
@@ -70,13 +70,42 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action unlock_keychain
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/unlock_keychain.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run unlock_keychain
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run unlock_keychain parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/unlock_keychain.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

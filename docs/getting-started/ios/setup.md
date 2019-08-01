@@ -2,35 +2,17 @@
 
 ## Installing _fastlane_
 
-Make sure you have the latest version of the Xcode command line tools installed:
-
-```no-highlight
-xcode-select --install
-```
-
-Install _fastlane_ using 
-```no-highlight
-[sudo] gem install fastlane -NV
-```
-or alternatively using `brew cask install fastlane`
-
-Navigate to your project directory and run
-
-```no-highlight
-fastlane init
-```
+{!docs/includes/installing-fastlane.md!}
 
 ## Setting up _fastlane_
 
 Navigate your terminal to your project's directory and run
 
-_for Ruby setup_:
-
 ```no-highlight
 fastlane init
 ```
 
-_for Swift setup:_
+To have your `Fastfile` configuration written in Swift (Beta)
 
 ```no-highlight
 fastlane init swift
@@ -38,7 +20,7 @@ fastlane init swift
 
 **Swift setup is still in beta. See [Fastlane.swift docs](https://docs.fastlane.tools/getting-started/ios/fastlane-swift/) for more information.**
 
-Depending on what kind of setup you choose, different files will be set up for you. If you chose to download the existing app metadata, you'll end up new folders that look like this:
+Depending on what kind of setup you choose, different files will be set up for you. If you chose to download the existing app metadata, you'll end up with new folders that look like this:
 
 <img src="/img/getting-started/ios/fastlane-init.png" width="800" />
 
@@ -61,7 +43,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 ```
 
-You can find your shell profile at `~/.bashrc`, `~/.bash_profile` or `~/.zshrc` depending on your system. 
+You can find your shell profile at `~/.bashrc`, `~/.bash_profile`, `~/.profile` or `~/.zshrc` depending on your system.
 
 ### Use a Gemfile
 

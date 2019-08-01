@@ -1,4 +1,4 @@
-{!docs/setup-fastlane-header.md!}
+{!docs/includes/setup-fastlane-header.md!}
 
 # Running Android tests using _fastlane_
 
@@ -65,4 +65,4 @@ end
 
 #### Other services
 
-The above example uses Hipchat, but _fastlane_ supports [many other services out there](/actions#notifications). 
+The above example uses Hipchat, but _fastlane_ supports [many other services out there](/actions/#notifications). 

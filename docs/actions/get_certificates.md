@@ -25,7 +25,7 @@ Create new iOS code signing certificates (via _cert_)
 
 -------
 
-<h5 align="center"><code>cert</code> is part of <a href="https://fastlane.tools">fastlane</a>: The easiest way to automate beta deployments and releases for your iOS and Android apps.</h5>
+<h5 align="center"><em>cert</em> is part of <a href="https://fastlane.tools">fastlane</a>: The easiest way to automate beta deployments and releases for your iOS and Android apps.</h5>
 
 ![/img/actions/cert.gif](/img/actions/cert.gif)
 
@@ -33,7 +33,7 @@ In the gif we used `cert && sigh`, which will first create an iOS code signing c
 
 # Usage
 
-**Note**: It is recommended to use [_match_](/actions/match) according to the [codesigning.guide](https://codesigning.guide) for generating and maintaining your certificates. Use _cert_ directly only if you want full control over what's going on and know more about codesigning.
+**Note**: It is recommended to use [_match_](/actions/match/) according to the [codesigning.guide](https://codesigning.guide) for generating and maintaining your certificates. Use _cert_ directly only if you want full control over what's going on and know more about codesigning.
 
 ```no-highlight
 fastlane cert
@@ -148,13 +148,55 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `get_certificates` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::CERT_FILE_PATH` | The path to the certificate
+  `SharedValues::CERT_CERTIFICATE_ID` | The id of the certificate
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action get_certificates
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/get_certificates.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run get_certificates
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run get_certificates parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/get_certificates.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

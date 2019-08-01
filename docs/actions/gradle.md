@@ -22,7 +22,7 @@ Returns | The output of running the gradle task
 
 
 
-## 3 Examples
+## 4 Examples
 
 ```ruby
 gradle(
@@ -84,6 +84,13 @@ gradle(
 )
 ```
 
+```ruby
+# Delete the build directory and generated APKs
+gradle(
+  task: "clean"
+)
+```
+
 
 
 
@@ -93,7 +100,7 @@ gradle(
 Key | Description | Default
 ----|-------------|--------
   `task` | The gradle task you want to execute, e.g. `assemble` or `test`. For tasks such as `assembleMyFlavorRelease` you should use gradle(task: 'assemble', flavor: 'Myflavor', build_type: 'Release') | 
-  `flavor` | The flavor that you want the task for, e.g. `MyFlavor`. If you are running the `assemble` task in a multi-flavor project, and you rely on Actions.lane_context[Actions.SharedValues::GRADLE_APK_OUTPUT_PATH] then you must specify a flavor here or else this value will be undefined | 
+  `flavor` | The flavor that you want the task for, e.g. `MyFlavor`. If you are running the `assemble` task in a multi-flavor project, and you rely on Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH] then you must specify a flavor here or else this value will be undefined | 
   `build_type` | The build type that you want the task for, e.g. `Release`. Useful for some tasks such as `assemble` | 
   `flags` | All parameter flags you want to pass to the gradle command, e.g. `--exitcode --xml file.xml` | 
   `project_dir` | The root directory of the gradle project | `.`
@@ -108,13 +115,59 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `gradle` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::GRADLE_APK_OUTPUT_PATH` | The path to the newly generated apk file. Undefined in a multi-variant assemble scenario
+  `SharedValues::GRADLE_ALL_APK_OUTPUT_PATHS` | When running a multi-variant `assemble`, the array of signed apk's that were generated
+  `SharedValues::GRADLE_FLAVOR` | The flavor, e.g. `MyFlavor`
+  `SharedValues::GRADLE_BUILD_TYPE` | The build type, e.g. `Release`
+  `SharedValues::GRADLE_AAB_OUTPUT_PATH` | The path to the most recent Android app bundle
+  `SharedValues::GRADLE_ALL_AAB_OUTPUT_PATHS` | The paths to the most recent Android app bundles
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action gradle
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/gradle.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run gradle
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run gradle parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/gradle.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

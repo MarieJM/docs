@@ -6,7 +6,7 @@ To modify it, go to its source at https://github.com/fastlane/fastlane/blob/mast
 # onesignal
 
 
-Create a new OneSignal application
+Create a new [OneSignal](https://onesignal.com/) application
 
 
 
@@ -55,13 +55,55 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `onesignal` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::ONE_SIGNAL_APP_ID` | The OneSignal app ID of the newly created app
+  `SharedValues::ONE_SIGNAL_APP_AUTH_KEY` | The auth token for the newly created OneSignal app
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action onesignal
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/onesignal.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run onesignal
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run onesignal parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/onesignal.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

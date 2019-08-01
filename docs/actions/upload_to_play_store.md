@@ -17,7 +17,7 @@ Upload metadata, screenshots and binaries to Google Play (via _supply_)
 
 ###### Command line tool for updating Android apps and their metadata on the Google Play Store
 
-_supply_ uploads app metadata, screenshots and binaries to Google Play. You can also select tracks for builds and promote builds to production.
+_supply_ uploads app metadata, screenshots, binaries, and app bundles to Google Play. You can also select tracks for builds and promote builds to production.
 
 -------
 
@@ -27,6 +27,7 @@ _supply_ uploads app metadata, screenshots and binaries to Google Play. You can 
     <a href="#quick-start">Quick Start</a> &bull;
     <a href="#available-commands">Commands</a> &bull;
     <a href="#uploading-an-apk">Uploading an APK</a> &bull;
+    <a href="#uploading-an-aab">Uploading an AAB</a> &bull;
     <a href="#images-and-screenshots">Images</a>
 </p>
 
@@ -34,7 +35,7 @@ _supply_ uploads app metadata, screenshots and binaries to Google Play. You can 
 
 ## Features
 - Update existing Android applications on Google Play via the command line
-- Upload new builds (APKs)
+- Upload new builds (APKs and AABs)
 - Retrieve and edit metadata, such as title and description, for multiple languages
 - Upload the app icon, promo graphics and screenshots for multiple languages
 - Have a local copy of the metadata in your git repository
@@ -45,20 +46,7 @@ _supply_ uploads app metadata, screenshots and binaries to Google Play. You can 
 
 Setup consists of setting up your Google Developers Service Account
 
-1. Open the [Google Play Console](https://play.google.com/apps/publish/)
-1. Select **Settings** tab, followed by the **API access** tab
-1. Click the **Create Service Account** button and follow the **Google API Console** link in the dialog
-1. Click the **Create Service account** button at the top of the developers console screen
-1. Provide a name for the service account
-1. Click **Select a role** and choose **Service Accounts > Service Account User**
-1. Check the **Furnish a new private key** checkbox
-1. Select **JSON** as the Key type
-1. Click **Create** to close the dialog
-1. Make a note of the file name of the JSON file downloaded to your computer
-1. Back on the Google Play developer console, click **Done** to close the dialog
-1. Click on **Grant Access** for the newly added service account
-1. Choose **Release Manager** from the **Role** dropdown
-1. Click **Add user** to close the dialog
+{!docs/includes/google-credentials.md!}
 
 ### Migrating Google credential format (from .p12 key file to .json)
 
@@ -77,7 +65,7 @@ The previous p12 configuration is still currently supported.
 - `cd [your_project_folder]`
 - `fastlane supply init`
 - Make changes to the downloaded metadata, add images, screenshots and/or an APK
-- `fastlane supply run`
+- `fastlane supply`
 
 ## Available Commands
 
@@ -103,10 +91,40 @@ To gradually roll out a new build use
 fastlane supply --apk path/app.apk --track rollout --rollout 0.5
 ```
 
+### Expansion files (`.obb`)
+
 Expansion files (obbs) found under the same directory as your APK will also be uploaded together with your APK as long as:
 
 - they are identified as type 'main' or 'patch' (by containing 'main' or 'patch' in their file name)
 - you have at most one of each type
+
+If you only want to update the APK, but keep the expansion files from the previous version on Google Play use
+
+```no-highlight
+fastlane supply --apk path/app.apk --obb_main_references_version 21 --obb_main_file_size 666154207
+```
+
+or
+
+```no-highlight
+fastlane supply --apk path/app.apk --obb_patch_references_version 21 --obb_patch_file_size 666154207
+```
+
+## Uploading an AAB
+
+To upload a new [Android application bundle](https://developer.android.com/guide/app-bundle/) to Google Play, simply run
+
+```no-highlight
+fastlane supply --aab path/to/app.aab
+```
+
+This will also upload app metadata if you previously ran `fastlane supply init`.
+
+To gradually roll out a new build use
+
+```no-highlight
+fastlane supply --aab path/app.aab --track rollout --rollout 0.5
+```
 
 ## Images and Screenshots
 
@@ -131,7 +149,7 @@ Note that these will replace the current images and screenshots on the play stor
 
 ## Changelogs (What's new)
 
-You can add changelog files under the `changelogs/` directory for each locale. The filename should exactly match the version code of the APK that it represents. `fastlane supply init` will populate changelog files from existing data on Google Play if no `metadata/` directory exists when it is run.
+You can add changelog files under the `changelogs/` directory for each locale. The filename should exactly match the [version code](https://developer.android.com/studio/publish/versioning#appversioning) of the APK that it represents. `fastlane supply init` will populate changelog files from existing data on Google Play if no `metadata/` directory exists when it is run.
 
 ```no-highlight
 └── fastlane
@@ -194,7 +212,10 @@ Key | Description | Default
   `json_key_data` | The raw service account JSON data used to authenticate with Google | [*](#parameters-legend-dynamic)
   `apk` | Path to the APK file to upload | [*](#parameters-legend-dynamic)
   `apk_paths` | An array of paths to APK files to upload | 
+  `aab` | Path to the AAB file to upload | [*](#parameters-legend-dynamic)
+  `aab_paths` | An array of paths to AAB files to upload | 
   `skip_upload_apk` | Whether to skip uploading APK | `false`
+  `skip_upload_aab` | Whether to skip uploading AAB | `false`
   `skip_upload_metadata` | Whether to skip uploading metadata | `false`
   `skip_upload_images` | Whether to skip uploading images, screenshots not included | `false`
   `skip_upload_screenshots` | Whether to skip uploading SCREENSHOTS | `false`
@@ -204,18 +225,54 @@ Key | Description | Default
   `mapping_paths` | An array of paths to mapping files to upload | 
   `root_url` | Root URL for the Google Play API. The provided URL will be used for API calls in place of https://www.googleapis.com/ | 
   `check_superseded_tracks` | Check the other tracks for superseded versions and disable them | `false`
+  `timeout` | Timeout for read, open, and send (in seconds) | `300`
+  `deactivate_on_promote` | When promoting to a new track, deactivate the binary in the origin track | `true`
+  `version_codes_to_retain` | An array of version codes to retain when publishing a new APK | 
+  `obb_main_references_version` | References version of 'main' expansion file | 
+  `obb_main_file_size` | Size of 'main' expansion file in bytes | 
+  `obb_patch_references_version` | References version of 'patch' expansion file | 
+  `obb_patch_file_size` | Size of 'patch' expansion file in bytes | 
 
 <em id="parameters-legend-dynamic">* = default value is dependent on the user's system</em>
 
 
 <hr />
+
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action upload_to_play_store
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/upload_to_play_store.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run upload_to_play_store
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run upload_to_play_store parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/upload_to_play_store.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

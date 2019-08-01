@@ -84,15 +84,15 @@ _scan_ uses the latest APIs and tools to make running tests plain simple and off
 🚠 | Sensible defaults: Automatically detect the project, schemes and more
 📊 | Support for HTML, JSON and JUnit reports
 🔎 | Xcode duplicated your simulators again? _scan_ will handle this for you
-🔗  | Works perfectly with [_fastlane_](https://fastlane.tools) and other tools
+🔗 | Works perfectly with [_fastlane_](https://fastlane.tools) and other tools
 🚅 | Don't remember any complicated build commands, just _scan_
-🔧  | Easy and dynamic configuration using parameters and environment variables
+🔧 | Easy and dynamic configuration using parameters and environment variables
 📢 | Beautiful slack notifications of the test results
-💾   | Store common build settings in a `Scanfile`
+💾 | Store common build settings in a `Scanfile`
 📤 | The raw `xcodebuild` outputs are stored in `~/Library/Logs/scan`
 💻 | Supports both iOS and Mac applications
-👱      | Automatically switches to the [travis formatter](https://github.com/kattrali/xcpretty-travis-formatter) when running on Travis
-📖     | Helps you resolve common test errors like simulator not responding
+👱 | Automatically switches to the [travis formatter](https://github.com/kattrali/xcpretty-travis-formatter) when running on Travis
+📖 | Helps you resolve common test errors like simulator not responding
 
 _scan_ uses a plain `xcodebuild` command, therefore keeping 100% compatible with `xcodebuild`. To generate the nice output, _scan_ uses [xcpretty](https://github.com/supermarin/xcpretty). You can alway access the raw output in `~/Library/Logs/scan`.
 
@@ -103,15 +103,21 @@ _scan_ uses a plain `xcodebuild` command, therefore keeping 100% compatible with
 
 # Usage
 
-    fastlane scan
+```no-highlight
+fastlane scan
+```
 
 That's all you need to run your tests. If you want more control, here are some available parameters:
 
-    fastlane scan --workspace "Example.xcworkspace" --scheme "AppName" --device "iPhone 6" --clean
+```no-highlight
+fastlane scan --workspace "Example.xcworkspace" --scheme "AppName" --device "iPhone 6" --clean
+```
 
 If you need to use a different xcode install, use `xcode-select` or define `DEVELOPER_DIR`:
 
-    DEVELOPER_DIR="/Applications/Xcode6.2.app" scan
+```no-highlight
+DEVELOPER_DIR="/Applications/Xcode6.2.app" scan
+```
 
 To run _scan_ on multiple devices via [_fastlane_](https://fastlane.tools), add this to your `Fastfile`:
 
@@ -218,58 +224,114 @@ Key | Description | Default
 ----|-------------|--------
   `workspace` | Path to the workspace file | 
   `project` | Path to the project file | 
-  `device` | The name of the simulator type you want to run tests on (e.g. 'iPhone 6') | 
-  `toolchain` | The toolchain that should be used for building the application (e.g. com.apple.dt.toolchain.Swift_2_3, org.swift.30p620160816a) | 
-  `devices` | Array of devices to run the tests on (e.g. ['iPhone 6', 'iPad Air']) | 
   `scheme` | The project's scheme. Make sure it's marked as `Shared` | 
+  `device` | The name of the simulator type you want to run tests on (e.g. 'iPhone 6') | 
+  `devices` | Array of devices to run the tests on (e.g. ['iPhone 6', 'iPad Air']) | 
+  `skip_detect_devices` | Should skip auto detecting of devices if none were specified | `false`
+  `force_quit_simulator` | Enabling this option will automatically killall Simulator processes before the run | `false`
+  `reset_simulator` | Enabling this option will automatically erase the simulator before running the application | `false`
+  `prelaunch_simulator` | Enabling this option will launch the first simulator prior to calling any xcodebuild command | 
+  `reinstall_app` | Enabling this option will automatically uninstall the application before running it | `false`
+  `app_identifier` | The bundle identifier of the app to uninstall (only needed when enabling reinstall_app) | [*](#parameters-legend-dynamic)
+  `only_testing` | Array of strings matching Test Bundle/Test Suite/Test Cases to run | 
+  `skip_testing` | Array of strings matching Test Bundle/Test Suite/Test Cases to skip | 
+  `xctestrun` | Run tests using the provided `.xctestrun` file | 
+  `toolchain` | The toolchain that should be used for building the application (e.g. `com.apple.dt.toolchain.Swift_2_3, org.swift.30p620160816a`) | 
   `clean` | Should the project be cleaned before building it? | `false`
   `code_coverage` | Should code coverage be generated? (Xcode 7 and up) | 
   `address_sanitizer` | Should the address sanitizer be turned on? | 
   `thread_sanitizer` | Should the thread sanitizer be turned on? | 
-  `skip_build` | Should debug build be skipped before test build? | `false`
+  `open_report` | Should the HTML report be opened when tests are completed? | `false`
   `output_directory` | The directory in which all reports will be stored | [*](#parameters-legend-dynamic)
-  `output_style` | Define how the output should look like (standard, basic, rspec or raw) | 
+  `output_style` | Define how the output should look like. Valid values are: standard, basic, rspec, or raw (disables xcpretty) | 
   `output_types` | Comma separated list of the output types (e.g. html, junit, json-compilation-database) | `html,junit`
   `output_files` | Comma separated list of the output files, corresponding to the types provided by :output_types (order should match). If specifying an output type of json-compilation-database with :use_clang_report_name enabled, that option will take precedence | 
   `buildlog_path` | The directory where to store the raw log | [*](#parameters-legend-dynamic)
   `include_simulator_logs` | If the logs generated by the app (e.g. using NSLog, perror, etc.) in the Simulator should be written to the output_directory | `false`
+  `suppress_xcode_output` | Suppress the output of xcodebuild to stdout. Output is still saved in buildlog_path | 
   `formatter` | A custom xcpretty formatter to use | 
-  `max_concurrent_simulators` | Constrain the number of simulator devices on which to test concurrently. Equivalent to -maximum-concurrent-test-simulator-destinations | 
-  `disable_concurrent_testing` | Do not run test bundles in parallel on the specified destinations. Testing will occur on each destination serially. Equivalent to -disable-concurrent-testing | `false`
-  `test_without_building` | Test without building, requires a derived data path | 
-  `build_for_testing` | Build for testing only, does not run tests | 
-  `xctestrun` | Run tests using the provided .xctestrun file | 
+  `xcpretty_args` | Pass in xcpretty additional command line arguments (e.g. '--test --no-color' or '--tap --no-utf') | 
   `derived_data_path` | The directory where build products and other derived data will go | 
   `should_zip_build_products` | Should zip the derived data build products and place in output path? | `false`
   `result_bundle` | Should an Xcode result bundle be generated in the output directory | `false`
+  `use_clang_report_name` | Generate the json compilation database with clang naming convention (compile_commands.json) | `false`
+  `max_concurrent_simulators` | Constrain the number of simulator devices on which to test concurrently. Equivalent to -maximum-concurrent-test-simulator-destinations | 
+  `disable_concurrent_testing` | Do not run test bundles in parallel on the specified destinations. Testing will occur on each destination serially. Equivalent to -disable-concurrent-testing | `false`
+  `skip_build` | Should debug build be skipped before test build? | `false`
+  `test_without_building` | Test without building, requires a derived data path | 
+  `build_for_testing` | Build for testing only, does not run tests | 
   `sdk` | The SDK that should be used for building the application | 
-  `open_report` | Should the HTML report be opened when tests are completed? | `false`
   `configuration` | The configuration to use when building the app. Defaults to 'Release' | [*](#parameters-legend-dynamic)
-  `destination` | Use only if you're a pro, use the other options instead | 
   `xcargs` | Pass additional arguments to xcodebuild. Be sure to quote the setting names and values e.g. OTHER_LDFLAGS="-ObjC -lstdc++" | 
   `xcconfig` | Use an extra XCCONFIG file to build your app | 
-  `only_testing` | Array of strings matching Test Bundle/Test Suite/Test Cases to run | 
-  `skip_testing` | Array of strings matching Test Bundle/Test Suite/Test Cases to skip | 
   `slack_url` | Create an Incoming WebHook for your Slack group to post results there | 
   `slack_channel` | #channel or @username | 
   `slack_message` | The message included with each message posted to slack | 
+  `slack_use_webhook_configured_username_and_icon` | Use webhook's default username and icon settings? (true/false) | `false`
+  `slack_username` | Overrides the webhook's username property if slack_use_webhook_configured_username_and_icon is false | `fastlane`
+  `slack_icon_url` | Overrides the webhook's image property if slack_use_webhook_configured_username_and_icon is false | `https://s3-eu-west-1.amazonaws.com/fastlane.tools/fastlane.png`
   `skip_slack` | Don't publish to slack, even when an URL is given | `false`
   `slack_only_on_failure` | Only post on Slack if the tests fail | `false`
-  `use_clang_report_name` | Generate the json compilation database with clang naming convention (compile_commands.json) | `false`
+  `destination` | Use only if you're a pro, use the other options instead | 
   `custom_report_file_name` | **DEPRECATED!** Use `--output_files` instead - Sets custom full report file name when generating a single report | 
+  `xcodebuild_command` | Allows for override of the default `xcodebuild` command | `env NSUnbufferedIO=YES xcodebuild`
   `fail_build` | Should this step stop the build if the tests fail? Set this to false if you're using trainer | `true`
 
 <em id="parameters-legend-dynamic">* = default value is dependent on the user's system</em>
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `scan` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::SCAN_DERIVED_DATA_PATH` | The path to the derived data
+  `SharedValues::SCAN_GENERATED_PLIST_FILE` | The generated plist file
+  `SharedValues::SCAN_GENERATED_PLIST_FILES` | The generated plist files
+  `SharedValues::SCAN_ZIP_BUILD_PRODUCTS_PATH` | The path to the zipped build products
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action scan
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/scan.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run scan
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run scan parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/scan.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

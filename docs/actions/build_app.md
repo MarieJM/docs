@@ -25,7 +25,7 @@ Alias for the `build_ios_app` action
 
 -------
 
-<h5 align="center"><code>gym</code> is part of <a href="https://fastlane.tools">fastlane</a>: The easiest way to automate beta deployments and releases for your iOS and Android apps.</h5>
+<h5 align="center"><em>gym</em> is part of <a href="https://fastlane.tools">fastlane</a>: The easiest way to automate beta deployments and releases for your iOS and Android apps.</h5>
 
 # What's gym?
 
@@ -57,15 +57,15 @@ _gym_ uses the latest APIs to build and sign your application which results in m
 
 |          |  Gym Features  |
 |----------|----------------|
-🚀            | _gym_ builds 30% faster than other build tools like [shenzhen](https://github.com/nomad/shenzhen)
+🚀 | _gym_ builds 30% faster than other build tools like [shenzhen](https://github.com/nomad/shenzhen)
 🏁 | Beautiful inline build output
-📖    | Helps you resolve common build errors like code signing issues
+📖 | Helps you resolve common build errors like code signing issues
 🚠 | Sensible defaults: Automatically detect the project, its schemes and more
-🔗  | Works perfectly with [_fastlane_](https://fastlane.tools) and other tools
+🔗 | Works perfectly with [_fastlane_](https://fastlane.tools) and other tools
 📦 | Automatically generates an `ipa` and a compressed `dSYM` file
 🚅 | Don't remember any complicated build commands, just _gym_
-🔧  | Easy and dynamic configuration using parameters and environment variables
-💾   | Store common build settings in a `Gymfile`
+🔧 | Easy and dynamic configuration using parameters and environment variables
+💾 | Store common build settings in a `Gymfile`
 📤 | All archives are stored and accessible in the Xcode Organizer
 💻 | Supports both iOS and Mac applications
 
@@ -147,25 +147,28 @@ export_options("./ExportOptions.plist")
 or you can provide hash of values directly in the `Gymfile`:
 
 ```ruby-skip-tests
-export_options: {
+export_options({
   method: "ad-hoc",
   manifest: {
     appURL: "https://example.com/My App.ipa",
   },
   thinning: "<thin-for-all-variants>"
-}
+})
 ```
 
 Optional: If _gym_ can't automatically detect the provisioning profiles to use, you can pass a mapping of bundle identifiers to provisioning profiles:
 
-```ruby-skip-tests
-export_options: {
-  method: "app-store",
-  provisioningProfiles: { 
-    "com.example.bundleid" => "Provisioning Profile Name",
-    "com.example.bundleid2" => "Provisioning Profile Name 2"
+```ruby
+build_ios_app(
+  scheme: "Release",
+  export_options: {
+    method: "app-store",
+    provisioningProfiles: { 
+      "com.example.bundleid" => "Provisioning Profile Name",
+      "com.example.bundleid2" => "Provisioning Profile Name 2"
+    }
   }
-}
+)
 ```
 
 **Note**: If you use [_fastlane_](https://fastlane.tools) with [_match_](https://fastlane.tools/match) you don't need to provide those values manually.
@@ -313,14 +316,15 @@ Key | Description | Default
   `include_symbols` | Should the ipa file include symbols? | 
   `include_bitcode` | Should the ipa file include bitcode? | 
   `export_method` | Method used to export the archive. Valid values are: app-store, ad-hoc, package, enterprise, development, developer-id | 
-  `export_options` | Specifies path to export options plist. Use 'xcodebuild -help' to print the full set of available options | 
+  `export_options` | Path to an export options plist or a hash with export options. Use 'xcodebuild -help' to print the full set of available options | 
   `export_xcargs` | Pass additional arguments to xcodebuild for the package phase. Be sure to quote the setting names and values e.g. OTHER_LDFLAGS="-ObjC -lstdc++" | 
-  `skip_build_archive` | Export ipa from previously built xarchive. Uses archive_path as source | 
+  `skip_build_archive` | Export ipa from previously built xcarchive. Uses archive_path as source | 
   `skip_archive` | After building, don't archive, effectively not including -archivePath param | 
   `build_path` | The directory in which the archive should be stored in | 
   `archive_path` | The path to the created archive | 
   `derived_data_path` | The directory where built products and other derived data will go | 
   `result_bundle` | Should an Xcode result bundle be generated in the output directory | `false`
+  `result_bundle_path` | Path to the result bundle directory to create. Ignored if `result_bundle` if false | 
   `buildlog_path` | The directory where to store the build log | [*](#parameters-legend-dynamic)
   `sdk` | The SDK that should be used for building the application | 
   `toolchain` | The toolchain that should be used for building the application (e.g. com.apple.dt.toolchain.Swift_2_3, org.swift.30p620160816a) | 
@@ -343,13 +347,56 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Lane Variables
+
+Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `build_app` action generates the following Lane Variables:
+
+SharedValue | Description 
+------------|-------------
+  `SharedValues::IPA_OUTPUT_PATH` | The path to the newly generated ipa file
+  `SharedValues::DSYM_OUTPUT_PATH` | The path to the dSYM files
+  `SharedValues::XCODEBUILD_ARCHIVE` | The path to the xcodebuild archive
+
+To get more information check the [Lanes documentation](https://docs.fastlane.tools/advanced/lanes/#lane-context).
+<hr />
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action build_app
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/build_app.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run build_app
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run build_app parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/build_app.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

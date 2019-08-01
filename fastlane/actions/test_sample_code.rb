@@ -61,9 +61,13 @@ module Fastlane
             config_item = available_options.find { |a| a.key == current_argument }
             UI.user_error!("Unknown parameter '#{current_argument}' for action '#{method_sym}'") if config_item.nil?
 
-            if config_item.data_type && !value.kind_of?(config_item.data_type) && !config_item.optional && !config_item.skip_type_validation
-              UI.user_error!("'#{current_argument}' value must be a #{config_item.data_type}! Found #{value.class} instead.")
+            if value.nil? && config_item.optional
+              next
             end
+
+            # Setting verify_block to nil because not needed
+            config_item.verify_block = nil
+            config_item.valid?(value)
           end
         else
           UI.verbose("Legacy parameter technique for action '#{method_sym}'")
@@ -93,7 +97,7 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :path),
-          FastlaneCore::ConfigItem.new(key: :content),
+          FastlaneCore::ConfigItem.new(key: :content)
         ]
       end
 

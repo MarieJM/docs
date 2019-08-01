@@ -50,18 +50,49 @@ Key | Description | Default
   `source_encoding` | Used encoding of source files, e.g., UTF-8 | 
   `sonar_runner_args` | Pass additional arguments to sonar-scanner. Be sure to provide the arguments with a leading `-D` e.g. FL_SONAR_RUNNER_ARGS="-Dsonar.verbose=true" | 
   `sonar_login` | Pass the Sonar Login token (e.g: xxxxxxprivate_token_XXXXbXX7e) | 
+  `sonar_url` | Pass the url of the Sonar server | 
+  `branch_name` | Pass the branch name which is getting scanned | 
 
 <em id="parameters-legend-dynamic">* = default value is dependent on the user's system</em>
 
 
 <hr />
+
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action sonar
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/sonar.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run sonar
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run sonar parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/sonar.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

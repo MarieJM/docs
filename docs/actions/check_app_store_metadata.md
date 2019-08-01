@@ -20,7 +20,7 @@ Precheck
 
 ###### Check your app using a community driven set of App Store review rules to avoid being rejected
 
-Apple rejects builds for many avoidable metadata issues like including swear words 😮, other companies’ trademarks, or even mentioning an iOS bug 🐛. _fastlane precheck_ takes a lot of the guess work out by scanning your app’s details in iTunes Connect for avoidable problems. fastlane precheck helps you get your app through app review without rejections so you can ship faster 🚀
+Apple rejects builds for many avoidable metadata issues like including swear words 😮, other companies’ trademarks, or even mentioning an iOS bug 🐛. _fastlane precheck_ takes a lot of the guess work out by scanning your app’s details in App Store Connect for avoidable problems. fastlane precheck helps you get your app through app review without rejections so you can ship faster 🚀
 
 -------
 
@@ -38,17 +38,17 @@ Apple rejects builds for many avoidable metadata issues like including swear wor
 
 |          |  precheck Features  |
 |----------|-----------------|
-|🐛|  product bug mentions|
-|🙅|Swear word checker|
-|🤖|Mentioning other platforms|
-|😵|URL reachability checker|
-|📝|Placeholder/test words/mentioning future features|
-|📅|Copyright date checking|
-|🙈|Customizable word list checking|
-|📢|You can decide if you want to warn about potential problems and continue or have _fastlane_ show an error and stop after all scans are done|
+🐛 |  product bug mentions
+🙅 | Swear word checker
+🤖 | Mentioning other platforms
+😵 | URL reachability checker
+📝 | Placeholder/test words/mentioning future features
+📅 | Copyright date checking
+🙈 | Customizable word list checking
+📢 | You can decide if you want to warn about potential problems and continue or have _fastlane_ show an error and stop after all scans are done
 
 # Usage
-Run _fastlane precheck_ to check the app metadata from iTunes Connect
+Run _fastlane precheck_ to check the app metadata from App Store Connect
 
 ```no-highlight
 fastlane precheck
@@ -110,7 +110,7 @@ end
 
 # How does it work?
 
-_precheck_ will access `iTunes Connect` to download your app's metadata. It uses [_spaceship_](https://spaceship.airforce) to communicate with Apple's web services.
+_precheck_ will access `App Store Connect` to download your app's metadata. It uses [_spaceship_](https://spaceship.airforce) to communicate with Apple's web services.
 
 # Want to improve precheck's rules?
 Please submit an issue on GitHub and provide information about your App Store rejection! Make sure you scrub out any personally identifiable information since this will be public.
@@ -149,8 +149,8 @@ Key | Description | Default
 ----|-------------|--------
   `app_identifier` | The bundle identifier of your app | [*](#parameters-legend-dynamic)
   `username` | Your Apple ID Username | [*](#parameters-legend-dynamic)
-  `team_id` | The ID of your iTunes Connect team if you're in multiple teams | [*](#parameters-legend-dynamic)
-  `team_name` | The name of your iTunes Connect team if you're in multiple teams | [*](#parameters-legend-dynamic)
+  `team_id` | The ID of your App Store Connect team if you're in multiple teams | [*](#parameters-legend-dynamic)
+  `team_name` | The name of your App Store Connect team if you're in multiple teams | [*](#parameters-legend-dynamic)
   `default_rule_level` | The default rule level unless otherwise configured | `:error`
   `include_in_app_purchases` | Should check in-app purchases? | `true`
   `negative_apple_sentiment` | mentioning  in a way that could be considered negative | 
@@ -168,13 +168,42 @@ Key | Description | Default
 
 
 <hr />
+
+
+
+## Documentation
+
 To show the documentation in your terminal, run
 ```no-highlight
 fastlane action check_app_store_metadata
 ```
 
-<a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/check_app_store_metadata.rb" target="_blank">View source code</a>
+<hr />
+
+## CLI
+
+It is recommended to add the above action into your `Fastfile`, however sometimes you might want to run one-offs. To do so, you can run the following command from your terminal
+
+```no-highlight
+fastlane run check_app_store_metadata
+```
+
+To pass parameters, make use of the `:` symbol, for example
+
+```no-highlight
+fastlane run check_app_store_metadata parameter1:"value1" parameter2:"value2"
+```
+
+It's important to note that the CLI supports primitive types like integers, floats, booleans, and strings. Arrays can be passed as a comma delimited string (e.g. `param:"1,2,3"`). Hashes are not currently supported.
+
+It is recommended to add all _fastlane_ actions you use to your `Fastfile`.
 
 <hr />
 
-<a href="/actions"><b>Back to actions</b></a>
+## Source code
+
+This action, just like the rest of _fastlane_, is fully open source, <a href="https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/check_app_store_metadata.rb" target="_blank">view the source code on GitHub</a>
+
+<hr />
+
+<a href="/actions/"><b>Back to actions</b></a>

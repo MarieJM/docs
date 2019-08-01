@@ -1,3 +1,4 @@
+#!/bin/sh
 # Partly taken from https://medium.com/@nielsenramon/automated-deployment-of-jekyll-projects-to-github-pages-using-kickster-and-circle-ci-6ccc0b6cb872#.qxsy1xf1m
 
 
@@ -14,7 +15,7 @@ echo "Starting deploy to https://docs.fastlane.tools"
 find ./docs/actions/ -type f | xargs sed -i 's/\`\`\`ruby\-skip\-tests/\`\`\`ruby/g'
 
 # Build the docs page locally
-mkdocs build --clean
+mkdocs build
 
 # Bots need names too
 git config --global user.email "fastlanebothelper@krausefx.com"
@@ -41,11 +42,6 @@ echo "docs.fastlane.tools" > "CNAME"
 
 echo "Generating redirects..."
 ruby /tmp/generate_redirects.rb
-
-# We also need a circle.yml file on the gh-pages branch, otherwise the build fails
-echo "test:
-  override:
-  - echo 'Running on gh-pages branch'" > "circle.yml"
 
 # Commit all the changes and push it to the remote
 git add -A

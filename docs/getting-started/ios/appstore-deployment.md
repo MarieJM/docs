@@ -1,4 +1,4 @@
-{!docs/setup-fastlane-header.md!}
+{!docs/includes/setup-fastlane-header.md!}
 
 # iOS App Store deployment using _fastlane_
 
@@ -32,7 +32,7 @@ If everything works, you should have a `[ProductName].ipa` file in the current d
 
 ## Codesigning
 
-Chances are that something went wrong because of code signing at the previous step. We prepared our own [Code Signing Guide](/codesigning/GettingStarted) that helps you setting up the right code signing approach for your project.
+Chances are that something went wrong because of code signing at the previous step. We prepared our own [Code Signing Guide](/codesigning/getting-started/) that helps you setting up the right code signing approach for your project.
 
 # Submitting your app
 
@@ -49,7 +49,7 @@ lane :release do
   capture_screenshots                  # generate new screenshots for the App Store
   sync_code_signing(type: "appstore")  # see code signing guide for more information
   build_app(scheme: "MyApp")
-  upload_to_app_store                  # upload your app to iTunes Connect
+  upload_to_app_store                  # upload your app to App Store Connect
   slack(message: "Successfully uploaded a new App Store build")
 end
 ```
@@ -60,7 +60,7 @@ For a list of all options for each of the steps run `fastlane action [action_nam
 
 ## More details
 
-For more details on how `upload_to_app_store` works, how you can define more options, check out [upload_to_app_store](/actions/upload_to_app_store).
+For more details on how `upload_to_app_store` works, how you can define more options, check out [upload_to_app_store](/actions/upload_to_app_store/).
 
 # Best Practices
 
@@ -85,7 +85,7 @@ If you don't have any push certificates already, _get_push_certificate_ will cre
 <details>
 <summary>Incrementing the build number</summary>
 
-The code sample below will use the latest build number from iTunes Connect and temporarily set it. 
+The code sample below will use the latest build number from App Store Connect and temporarily set it. 
 
 ```ruby
 lane :beta do

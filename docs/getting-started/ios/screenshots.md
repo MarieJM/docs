@@ -1,4 +1,4 @@
-{!docs/setup-fastlane-header.md!}
+{!docs/includes/setup-fastlane-header.md!}
 
 # _fastlane_ screenshots for iOS and tvOS
 
@@ -23,9 +23,9 @@ However, the biggest disadvantage of this method is what happens when you need t
 
 The positive side of this approach is that your screenshots will all be crisp and correctly sized, with readable text.
 
-### Scaled Screenshots via iTunes Connect
+### Scaled Screenshots via App Store Connect
 
-With the [iTunes Connect screenshot update](https://developer.apple.com/news/?id=08082016a) from August 2016, you can now use one set of screenshots for all available devices and screenshots. iTunes Connect will automatically scale the images for you, so that each device renders the same image.
+App Store Connect allows you to use one set of screenshots per device type, which will then be scaled to the appropriate size when viewed in the App Store on a user's device.
 
 While this is convenient, this approach has the same problems as the device frame approach: The screenshots don't actually show how the app looks on the user's device. It's a valid way to start though, since you can gradually overwrite screenshots for specific languages and devices.
 
@@ -34,7 +34,7 @@ While this is convenient, this approach has the same problems as the device fram
 _snapshot_ works with _fastlane_ to automate the process of capturing screenshots of your app. It allows you to:
 
 - Capture hundreds of screenshots in multiple languages on all simulators
-- Take screenshots in multiple device simulators concurrently to cut down execution time (Xcode 9 only)
+- Take screenshots in multiple device simulators concurrently to cut down execution time
 - Do something else while the computer takes the screenshots for you
 - Configure it once, and store the configuration so anyone on the team can run it
 - Generate a beautiful web page showing all screenshots on all devices. This is perfect to send to Q&A, marketing, or translators for verification
@@ -74,7 +74,7 @@ To jump-start your UI tests, you can use the UI Test recorder, which you can sta
 1. In your UI Test class, click the `Record` button on the bottom left and record your interaction
 1. To take a screenshot, call the following between interactions
   - Swift: `snapshot("01LoginScreen")`
-  - Objective C: `[Snapshot snapshot:@"01LoginScreen" waitForLoadingIndicator:YES];`
+  - Objective C: `[Snapshot snapshot:@"01LoginScreen" timeWaitingForIdle:10];`
 1. Add the following code to your `setUp()` method:
 
 **Swift:**
@@ -146,7 +146,7 @@ fastlane snapshot                               # Generate screenshots for the s
 
 # Upload Screenshots to the App Store
 
-After generating your screenshots using `fastlane snapshot`, you usually want to upload them to iTunes Connect.
+After generating your screenshots using `fastlane snapshot`, you usually want to upload them to App Store Connect.
 
 If you followed the setup guide, you already ran `fastlane init` before, so you should have your existing screenshots and metadata inside the `fastlane/screenshots` and `fastlane/metadata` directory. Running `fastlane snapshot` will store the screenshots in the `fastlane/screenshots` directory by default. 
 
@@ -156,14 +156,14 @@ To upload the screenshots stored in `fastlane/screenshots`, just run
 fastlane deliver
 ```
 
-This will also show you a metadata summary, before actually uploading the screenshots, as this will overwrite the metadata and screenshots you already have on iTunes Connect. 
+This will also show you a metadata summary, before actually uploading the screenshots, as this will overwrite the metadata and screenshots you already have on App Store Connect. 
 
 # Use in Fastfile
 
 To put all of this together so that anyone on your team could trigger generating and uploading new screenshots, you can define a _fastlane_ lane called `screenshots`. It would be responsible for:
 
 1. Running your app through _snapshot_ to automatically capture your screenshots
-1. Having _deliver_ send your final screenshots to iTunes Connect for use in the App Store
+1. Having _deliver_ send your final screenshots to App Store Connect for use in the App Store
 
 Add the following code to your `fastlane/Fastfile`:
 
@@ -206,7 +206,7 @@ This will only add a device frame around the screenshots, not the background and
 
 If you want to implement the custom titles and background, you'll have to setup a `Framefile.json`, more information can be found [here](https://docs.fastlane.tools/actions/frameit/#titles-and-background-optional).
 
-If you want to upload the screenshots to the App Store, you **have** to provide a `Framefile.json`, with titles and background, otherwise the resolution of the framed screenshots doesn't match the requirements of iTunes Connect.
+If you want to upload the screenshots to the App Store, you **have** to provide a `Framefile.json`, with titles and background, otherwise the resolution of the framed screenshots doesn't match the requirements of App Store Connect.
 
 ## Dependencies
 

@@ -1,4 +1,4 @@
-{!docs/setup-fastlane-header.md!}
+{!docs/includes/setup-fastlane-header.md!}
 
 # iOS Beta deployment using _fastlane_
 
@@ -32,7 +32,7 @@ If everything works, you should have a `[ProductName].ipa` file in the current d
 
 ## Codesigning
 
-Chances are that something went wrong because of code signing at the previous step. We prepared our own [Code Signing Guide](/codesigning/GettingStarted) that helps you setting up the right code signing approach for your project.
+Chances are that something went wrong because of code signing at the previous step. We prepared our own [Code Signing Guide](/codesigning/getting-started/) that helps you setting up the right code signing approach for your project.
 
 # Uploading your app
 
@@ -56,13 +56,13 @@ To get a list of all available parameters for a given action, run
 fastlane action slack
 ```
 
-### Supported beta testing services
+### Beta testing services
 
 
 <details>
 <summary>TestFlight</summary>
 
-You can easily upload new builds to TestFlight (which is part of iTunes Connect) using _fastlane_. To do so, just use the built-in `testflight` action after building your app
+You can easily upload new builds to TestFlight (which is part of App Store Connect) using _fastlane_. To do so, just use the built-in `testflight` action after building your app
 
 ```ruby
 lane :beta do
@@ -139,7 +139,7 @@ end
 
 To get your API token, open [API Tokens in Account Settings](https://rink.hockeyapp.net/manage/auth_tokens). From there, you can find your existing API token, or create a new one. 
 
-To get a list of all available options see the [`hockey` action docs](https://docs.fastlane.tools/actions/Actions/#hockey), or run 
+To get a list of all available options see the [`hockey` action docs](https://docs.fastlane.tools/actions/hockey/), or run 
 
 ```no-highlight
 fastlane action hockey
@@ -199,7 +199,7 @@ Get a list of all available options using `fastlane action changelog_from_git_co
 ```ruby
 changelog_from_git_commits(
   between: ['7b092b3', 'HEAD'], # Optional, lets you specify a revision/tag range between which to collect commit info
-  include_merges: true # Optional, lets you filter out merge commits
+  merge_commit_filtering: exclude_merges # Optional, lets you filter out merge commits
 )
 ```
 ---
@@ -369,6 +369,16 @@ For all the steps above, there are more parameters available, run the following 
 
 ```no-highlight
 fastlane action [action_name]
+```
+
+### Use the number of commits
+
+This isn't recommended, however some teams prefer this approach. You can use the number of commits of the current branch (via [`number_of_commits`](https://docs.fastlane.tools/actions/number_of_commits/)) as the build number. This will only work if you always run the build on the same branch.
+
+```ruby
+lane :beta do
+  increment_build_number(build_number: number_of_commits)
+end
 ```
 
 ---
